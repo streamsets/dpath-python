@@ -1,3 +1,4 @@
+import dpath.options
 import dpath.path
 import dpath.exceptions
 import traceback
@@ -22,13 +23,19 @@ def __safe_path__(path, separator):
     path = path.lstrip(separator).split(separator)
     validated = []
     for elem in path:
-        key = elem[0]
-        strkey = str(key)
-        if (separator and (separator in strkey)):
-            raise dpath.exceptions.InvalidKeyName("{0} at {1} contains the separator {2}"
-                                                  "".format(strkey,
-                                                            separator.join(validated),
-                                                            separator))
+        if not elem:
+            if not dpath.options.ALLOW_EMPTY_STRING_KEYS:
+                raise dpath.exceptions.InvalidKeyName("Empty string keys not allowed without "
+                                                      "dpath.options.ALLOW_EMPTY_STRING_KEYS=True")
+            strkey = elem
+        else:
+            key = elem[0]
+            strkey = str(key)
+            if (separator and (separator in strkey)):
+                raise dpath.exceptions.InvalidKeyName("{0} at {1} contains the separator {2}"
+                                                      "".format(strkey,
+                                                                separator.join(validated),
+                                                                separator))
         validated.append(strkey)
     return path
 

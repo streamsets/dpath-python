@@ -1,2 +1,7 @@
+__pycache__/
+
 .tox
 MANIFEST
+
+# Distribution / packaging
+*.egg-info/
